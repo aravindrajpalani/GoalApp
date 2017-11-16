@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">GoalApp</string>
+
+
+    <!--App Message-->
+    <string name="api_retry_error">Please retry!</string>
+    <string name="api_default_error">Something wrong happened!</string>
+    <string name="some_error">Some Error Occurred!</string>
+    <string name="connection_error">Internet connection lost!</string>
+    <!--FB App ID-->
+    <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
+    <string name="fb_login_protocol_scheme">FB_PROTOCOL_SCHEME</string>
+</resources>
