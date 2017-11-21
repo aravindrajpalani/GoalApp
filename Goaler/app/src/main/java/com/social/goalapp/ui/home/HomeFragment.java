@@ -65,7 +65,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private void init(View v) {
         mGoalRView = (RecyclerView) v.findViewById(R.id.goal_rview);
 
@@ -80,36 +79,44 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         mGoalRView.addItemDecoration(dividerItemDecoration);
         mGoalAdapter = new GoalAdapter(getContext(), mGoalList, mHomePresenter);
         mGoalRView.setAdapter(mGoalAdapter);
+        // only for gingerbread and newer versions
         showLoading();
+
+
         mHomePresenter.callAllGoalsAPI();
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     private void showLoading() {
         mLoadingImgView.setVisibility(View.VISIBLE);
         mLoadingTxtView.setVisibility(View.VISIBLE);
-        final AnimatedVectorDrawable drawable = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.ic_loadinganim);
-        mLoadingImgView.setImageDrawable(drawable);
-        final Handler mainHandler = new Handler(Looper.getMainLooper());
-        drawable.registerAnimationCallback(new Animatable2.AnimationCallback() {
-            @Override
-            public void onAnimationStart(Drawable drawable) {
-                super.onAnimationStart(drawable);
-            }
 
-            @Override
-            public void onAnimationEnd(final Drawable drawable) {
-                super.onAnimationEnd(drawable);
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((AnimatedVectorDrawable) drawable).start();
-                    }
-                });
-            }
-        });
-        drawable.start();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final AnimatedVectorDrawable drawable = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.ic_loadinganim);
+
+            mLoadingImgView.setImageDrawable(drawable);
+            final Handler mainHandler = new Handler(Looper.getMainLooper());
+            drawable.registerAnimationCallback(new Animatable2.AnimationCallback() {
+                @Override
+                public void onAnimationStart(Drawable drawable) {
+                    super.onAnimationStart(drawable);
+                }
+
+                @Override
+                public void onAnimationEnd(final Drawable drawable) {
+                    super.onAnimationEnd(drawable);
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((AnimatedVectorDrawable) drawable).start();
+                        }
+                    });
+                }
+            });
+            drawable.start();
+        }
+
     }
 
 
@@ -129,8 +136,8 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     }
 
     @Override
-    public void notifyAdapter(int pos,Result item) {
-        mGoalList.set(pos,item);
+    public void notifyAdapter(int pos, Result item) {
+        mGoalList.set(pos, item);
         mGoalAdapter.notifyDataSetChanged();
     }
 }
